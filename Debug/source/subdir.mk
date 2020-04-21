@@ -4,18 +4,30 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../source/LEDs.c \
 ../source/MKL25Z128xxx4_Project.c \
+../source/UART.c \
+../source/delay.c \
 ../source/mtb.c \
+../source/queue.c \
 ../source/semihost_hardfault.c 
 
 OBJS += \
+./source/LEDs.o \
 ./source/MKL25Z128xxx4_Project.o \
+./source/UART.o \
+./source/delay.o \
 ./source/mtb.o \
+./source/queue.o \
 ./source/semihost_hardfault.o 
 
 C_DEPS += \
+./source/LEDs.d \
 ./source/MKL25Z128xxx4_Project.d \
+./source/UART.d \
+./source/delay.d \
 ./source/mtb.d \
+./source/queue.d \
 ./source/semihost_hardfault.d 
 
 

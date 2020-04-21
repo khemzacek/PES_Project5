@@ -18,7 +18,10 @@ source/MKL25Z128xxx4_Project.o source/MKL25Z128xxx4_Project.d: \
  C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128xxx4_Project\board/pin_mux.h \
  C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128xxx4_Project\board/clock_config.h \
  C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128xxx4_Project\CMSIS/MKL25Z4.h \
- C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128xxx4_Project\utilities/fsl_debug_console.h
+ C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128xxx4_Project\utilities/fsl_debug_console.h \
+ ../source/gpio_defs.h ../source/UART.h \
+ C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128xxx4_Project\CMSIS/MKL25Z4.H \
+ ../source/queue.h ../source/LEDs.h
 
 C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128xxx4_Project\board/board.h:
 
@@ -57,3 +60,13 @@ C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128
 C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128xxx4_Project\CMSIS/MKL25Z4.h:
 
 C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128xxx4_Project\utilities/fsl_debug_console.h:
+
+../source/gpio_defs.h:
+
+../source/UART.h:
+
+C:\Users\Katherine.000\Documents\Spring\ 2020\PES\Project\ 5\workspace\MKL25Z128xxx4_Project\CMSIS/MKL25Z4.H:
+
+../source/queue.h:
+
+../source/LEDs.h:

@@ -41,6 +41,11 @@
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
 
+#include "gpio_defs.h"
+#include "UART.h"
+#include "LEDs.h"
+
+
 /* TODO: insert other definitions and declarations here. */
 
 /*
@@ -57,14 +62,51 @@ int main(void) {
 
     PRINTF("Hello World\n");
 
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-        /* 'Dummy' NOP to allow source level single stepping of
-            tight while() loop */
-        __asm volatile ("nop");
-    }
-    return 0 ;
+    // https://github.com/alexander-g-dean/ESF/blob/master/NXP/Code/Chapter_8/Serial-Demo/src/main.c
+    uint8_t buffer[80], c, * bp;
+
+    Init_UART0(115200);
+    Init_RGB_LEDs();
+
+    printf("\n\rGood morning!\n\r");
+
+    #if USE_UART_INTERRUPTS==0 // Polling version of code
+    	Send_String_Poll("\n\rHello, World!\n\r");
+
+    	// Code listing 8.9, p. 233
+    	while (1) {
+    		c = UART0_Receive_Poll();
+    		Control_RGB_LEDs(0, 0, 1);
+    		UART0_Transmit_Poll(c+1);
+    		Control_RGB_LEDs(0, 0, 0);
+    	}
+    #elif USE_UART_INTERRUPTS==1 // Interrupt version of code
+    	Send_String("\n\rHello, World!\n\r");
+
+    	// Code listing 8.10, p. 234
+    	while (1) {
+    		// Blocking receive
+    		while (Q_Size(&RxQ) == 0)
+    			; // wait for character to arrive
+    		c = Q_Dequeue(&RxQ);
+
+    		// Blocking transmit
+    		sprintf((char *) buffer, "You pressed %c\n\r", c);
+    		// enqueue string
+    		bp = buffer;
+    		while (*bp != '\0') {
+    			// copy characters up to null terminator
+    			while (Q_Full(&TxQ))
+    				; // wait for space to open up
+    			Q_Enqueue(&TxQ, *bp);
+    			bp++;
+    		}
+    		// start transmitter if it isn't already running
+    		if (!(UART0->C2 & UART0_C2_TIE_MASK)) {
+    			UART0->C2 |= UART0_C2_TIE(1);
+    		}
+    	}
+    #endif
+
 }
+
