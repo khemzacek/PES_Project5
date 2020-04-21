@@ -29,6 +29,9 @@ void Send_String(uint8_t * str);
 uint32_t Rx_Chars_Available(void);
 uint8_t	Get_Rx_Char(void);
 
+uint8_t Echo_Poll(void);
+uint8_t Echo(void);
+
 extern Q_T TxQ, RxQ;
 
 #endif /* UART_H_ */

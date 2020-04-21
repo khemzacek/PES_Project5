@@ -10,6 +10,8 @@
 
 #include "UART.h"
 #include <stdio.h>
+#include "LED_control.h"
+#include "delay.h"
 
 Q_T TxQ, RxQ;
 
@@ -166,6 +168,7 @@ void UART0_IRQHandler(void) {
 }
 
 void Send_String_Poll(uint8_t * str) {
+	LED_on(green);
 	// enqueue string
 	while (*str != '\0') { // Send characters up to null terminator
 		UART0_Transmit_Poll(*str++);
@@ -173,6 +176,7 @@ void Send_String_Poll(uint8_t * str) {
 }
 
 void Send_String(uint8_t * str) {
+	LED_on(green);
 	// enqueue string
 	while (*str != '\0') { // copy characters up to null terminator
 		while (Q_Full(&TxQ))
@@ -194,4 +198,48 @@ uint32_t Rx_Chars_Available(void) {
 
 uint8_t	Get_Rx_Char(void) {
 	return Q_Dequeue(&RxQ);
+}
+
+uint8_t Echo_Poll(void){
+	// Code listing 8.9, p. 233
+	uint8_t c;
+	//Wait until character received
+	LED_on(blue);
+	c = UART0_Receive_Poll();
+	//Transmit reveived character back to terminal
+	LED_on(green);
+	Delay(10);
+	UART0_Transmit_Poll(c);
+	//return character to be counted by main loop
+	return c;
+}
+
+uint8_t Echo(void){
+	// Code listing 8.10, p. 234
+	uint8_t buffer[80], c, * bp;
+
+	LED_on(blue);
+	// Blocking receive
+	while (Q_Size(&RxQ) == 0)
+		; // wait for character to arrive
+	c = Q_Dequeue(&RxQ);
+
+	LED_on(green);
+	// Blocking transmit
+	sprintf((char *) buffer, "You pressed %c\n\r", c);
+	// enqueue string
+	bp = buffer;
+	while (*bp != '\0') {
+		// copy characters up to null terminator
+		while (Q_Full(&TxQ))
+			; // wait for space to open up
+		Q_Enqueue(&TxQ, *bp);
+		bp++;
+	}
+	// start transmitter if it isn't already running
+	if (!(UART0->C2 & UART0_C2_TIE_MASK)) {
+		UART0->C2 |= UART0_C2_TIE(1);
+	}
+
+	return c;
 }
